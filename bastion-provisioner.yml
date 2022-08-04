@@ -1,0 +1,31 @@
+---
+- name: Ansible play to provision bastion machine
+  hosts: rhods_bastion
+  tasks: 
+    - name: Clone rh-emea-sa repository
+      ansible.builtin.git:
+        repo: https://github.com/rh-emea-sa/industrial-edge.git
+        dest: /home/lab-user
+        version: ml-ci-cd
+
+    - name: Populate values-secret.yml file in {{ ansible_user }} home
+      ansible.builtin.template:
+        src: values-secret.yaml.j2
+        dest: ~/values-secret.yaml
+
+    - name: Ensure helm is installed
+      ansible.builtin.unarchive:
+        src: "https://get.helm.sh/helm-v3.9.2-linux-amd64.tar.gz"
+        dest: /usr/bin/
+        remote_src: true
+        mode: +x
+      become: true
+
+    - name: Ensure right packages are in place
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: latest
+      become: true
+      loop:
+        - make
+    

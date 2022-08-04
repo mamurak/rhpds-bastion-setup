@@ -1,0 +1,6 @@
+git_repo: https://github.com/rh-emea-sa/industrial-edge.git
+
+quay_auth_token: 
+github_auth_token: 
+github_account_token: 
+s3_secret_b64:
