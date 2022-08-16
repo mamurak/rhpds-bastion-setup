@@ -7,3 +7,4 @@ s3_secret:
 
 ocp_username: 
 ocp_password: 
+ocp_api_url: 
