@@ -10,7 +10,7 @@
     - name: Check all variables are populated
       ansible.builtin.fail:
         msg: All variables in rhods_bastion.yml should be populated.
-      when: (quay_auth_token == None or quay_auth_token is not defined) or (github_access_token == None or github_access_token is not defined) or (github_account_token == None or github_account_token is not defined) or (s3_secret == None or s3_secret is not defined)
+      when: (quay_auth_token == None or quay_auth_token is not defined) or (github_access_token == None or github_access_token is not defined) or (github_account == None or github_account is not defined) or (s3_secret == None or s3_secret is not defined)
 
     - name: Clone rh-emea-sa repository
       ansible.builtin.git:
