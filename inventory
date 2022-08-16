@@ -1,2 +1,1 @@
 [rhods_bastion]
-bastion.7mv4q.sandbox779.opentlc.com ansible_user=lab-user ansible_ssh_pass=BptBAdsurfdR
