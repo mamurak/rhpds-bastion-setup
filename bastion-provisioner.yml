@@ -94,7 +94,7 @@
       loop: "{{ ocp_resources }}"
       register: secrets
 
-    - name: Print objects
+    - name: Show route and admin password for ArgoCD instances
       ansible.builtin.debug:
         msg: | 
           Host address for ArgoCD in {{ item.namespace }} is: {{ routes | community.general.json_query(route_query) | select() | join() }}
