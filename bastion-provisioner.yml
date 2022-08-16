@@ -2,60 +2,68 @@
 - name: Ansible play to provision bastion machine
   hosts: rhods_bastion
   tasks: 
+    # - name: Check all variables are populated
+    #   ansible.builtin.fail:
+    #     msg: All variables in rhods_bastion.yml should be populated.
+    #   when: (quay_auth_token == None or quay_auth_token is not defined) or (github_access_token == None or github_access_token is not defined) or (github_account == None or github_account is not defined) or (s3_secret == None or s3_secret is not defined)
 
-    - name: 
-      debug:
-        var: quay_auth_token
+    # - name: Clone rh-emea-sa repository
+    #   ansible.builtin.git:
+    #     repo: https://github.com/rh-emea-sa/industrial-edge.git
+    #     dest: /home/lab-user/industrial-edge
+    #     version: ml-ci-cd
 
-    - name: Check all variables are populated
-      ansible.builtin.fail:
-        msg: All variables in rhods_bastion.yml should be populated.
-      when: (quay_auth_token == None or quay_auth_token is not defined) or (github_access_token == None or github_access_token is not defined) or (github_account == None or github_account is not defined) or (s3_secret == None or s3_secret is not defined)
+    # - name: Populate values-secret.yml file in {{ ansible_user }} home
+    #   ansible.builtin.template:
+    #     src: values-secret.yaml.j2
+    #     dest: ~/values-secret.yaml
 
-    - name: Clone rh-emea-sa repository
-      ansible.builtin.git:
-        repo: https://github.com/rh-emea-sa/industrial-edge.git
-        dest: /home/lab-user/industrial-edge
-        version: ml-ci-cd
+    # - name: Ensure helm is installed
+    #   ansible.builtin.unarchive:
+    #     src: "https://get.helm.sh/helm-v3.9.2-linux-amd64.tar.gz"
+    #     dest: /tmp
+    #     remote_src: true
 
-    - name: Populate values-secret.yml file in {{ ansible_user }} home
-      ansible.builtin.template:
-        src: values-secret.yaml.j2
-        dest: ~/values-secret.yaml
+    # - name: Install helm in PATH
+    #   ansible.builtin.copy:
+    #     src: /tmp/linux-amd64/helm
+    #     dest: /usr/bin/
+    #     remote_src: true
+    #     mode: +x
+    #   become: true
 
-    - name: Ensure helm is installed
-      ansible.builtin.unarchive:
-        src: "https://get.helm.sh/helm-v3.9.2-linux-amd64.tar.gz"
-        dest: /tmp
-        remote_src: true
-
-    - name: Install helm in PATH
-      ansible.builtin.copy:
-        src: /tmp/linux-amd64/helm
-        dest: /usr/bin/
-        remote_src: true
-        mode: +x
-      become: true
-
-    - name: Cleanup temp folder
-      ansible.builtin.file:
-        state: absent
-        path: /tmp/linux-amd64/
+    # - name: Cleanup temp folder
+    #   ansible.builtin.file:
+    #     state: absent
+    #     path: /tmp/linux-amd64/
       
-    - name: Ensure right packages are in place
-      ansible.builtin.dnf:
-        name: "{{ item }}"
-        state: latest
-      become: true
-      loop:
-        - make
+    # - name: Ensure right packages are in place
+    #   ansible.builtin.dnf:
+    #     name: "{{ item }}"
+    #     state: latest
+    #   become: true
+    #   loop:
+    #     - make
     
-    - name: Run make show command to validate output
-      community.general.make:
-        chdir: ~/industrial-edge
-        target: show
+    # - name: Run make show command to validate output
+    #   community.general.make:
+    #     chdir: ~/industrial-edge
+    #     target: show
 
-    - name: Run install target to setup the environment
-      community.general.make:
-        chdir: ~/industrial-edge
-        target: install        
+    # - name: Run install target to setup the environment
+    #   community.general.make:
+    #     chdir: ~/industrial-edge
+    #     target: install
+
+    - name: Get an existing Service object
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Routes
+        name: "{{ item.route_name }}"
+        namespace: "{{ item.namespace }}"
+      loop:
+        - namespace: openshift-gitops
+          route_name: kam
+        - namespace: industrial-edge-datacenter
+          route_name: datacenter-gitops-server
+      register: Routes
