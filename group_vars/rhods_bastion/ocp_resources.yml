@@ -5,3 +5,6 @@ ocp_resources:
   - namespace: industrial-edge-datacenter
     route_name: datacenter-gitops-server
     secret_name: datacenter-gitops-cluster
+  - namespace: industrial-edge-factory
+    route_name: factory-gitops-server
+    secret_name: factory-gitops-cluster

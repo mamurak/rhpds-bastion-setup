@@ -13,7 +13,7 @@
       ansible.builtin.git:
         repo: https://github.com/rh-emea-sa/industrial-edge.git
         dest: /home/lab-user/industrial-edge
-        version: ml-ci-cd
+        version: "{{ git_branch }}" 
 
     - name: Populate values-secret.yml file in {{ ansible_user }} home
       ansible.builtin.template:
@@ -96,9 +96,9 @@
 
     - name: Show route and admin password for ArgoCD instances
       ansible.builtin.debug:
-        msg: | 
-          Host address for ArgoCD in {{ item.namespace }} is: {{ routes | community.general.json_query(route_query) | select() | join() }}
-          Password for ArgoCD instance in {{ item.namespace }} namespace is: {{ secrets | community.general.json_query(secret_query) | select() | join() | b64decode }}
+        msg: |
+          Host address for ArgoCD in {{ item.namespace }} is: {{ routes | community.general.json_query(route_query) | select() | join("") }}
+          Password for ArgoCD instance in {{ item.namespace }} namespace is: {{ secrets | community.general.json_query(secret_query) | select() | join("") | b64decode }}
       vars:
         route_query: "results[*].resources[?metadata.name=='{{ item.route_name }}'].spec.host"
         secret_query: "results[*].resources[?metadata.name=='{{ item.secret_name }}'].data.\"admin.password\""
