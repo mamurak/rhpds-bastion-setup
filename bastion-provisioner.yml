@@ -3,7 +3,7 @@
   hosts: rhods_bastion
   vars_files:
     - user_vars.yml
-  tasks: 
+  tasks:
     - name: Check all variables are populated
       ansible.builtin.fail:
         msg: All variables in rhods_bastion.yml should be populated.
@@ -11,14 +11,15 @@
 
     - name: Clone rh-emea-sa repository
       ansible.builtin.git:
-        repo: https://github.com/rh-emea-sa/industrial-edge.git
+        repo: "{{ git_repo }}"
         dest: /home/lab-user/industrial-edge
-        version: "{{ git_branch }}" 
+        version: "{{ git_branch }}"
 
     - name: Populate values-secret.yml file in {{ ansible_user }} home
       ansible.builtin.template:
         src: values-secret.yaml.j2
         dest: ~/values-secret.yaml
+        mode: 0755
 
     - name: Ensure helm is installed
       ansible.builtin.unarchive:
@@ -26,7 +27,7 @@
         dest: /tmp
         remote_src: true
 
-    - name: Install kubernetes Python module 
+    - name: Install kubernetes Python module
       ansible.builtin.pip:
         name: kubernetes
       become: true
@@ -43,15 +44,15 @@
       ansible.builtin.file:
         state: absent
         path: /tmp/linux-amd64/
-      
+
     - name: Ensure right packages are in place
       ansible.builtin.dnf:
         name: "{{ item }}"
-        state: latest
+        state: latest # noqa package-latest
       become: true
       loop:
         - make
-    
+
     - name: Run make show command to validate output
       community.general.make:
         chdir: ~/industrial-edge
