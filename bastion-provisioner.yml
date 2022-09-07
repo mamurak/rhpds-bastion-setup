@@ -54,12 +54,12 @@
         - make
 
     - name: Run make show command to validate output
-      community.general.make:
+      make:
         chdir: ~/industrial-edge
         target: show
 
     - name: Run install target to setup the environment
-      community.general.make:
+      make:
         chdir: ~/industrial-edge
         target: install
 
