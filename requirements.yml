@@ -3,3 +3,4 @@ collections:
 - community.general
 - kubernetes.core
 - community.okd
+- cloud.common
