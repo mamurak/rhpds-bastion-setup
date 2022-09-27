@@ -1,10 +1,10 @@
 ocp_resources:
   - namespace: openshift-gitops
-    route_name: kam
+    route_name: openshift-gitops-server
     secret_name: openshift-gitops-cluster
   - namespace: industrial-edge-datacenter
     route_name: datacenter-gitops-server
     secret_name: datacenter-gitops-cluster
-  - namespace: industrial-edge-factory
-    route_name: factory-gitops-server
-    secret_name: factory-gitops-cluster
+  # - namespace: industrial-edge-factory
+  #   route_name: factory-gitops-server
+  #   secret_name: factory-gitops-cluster

@@ -1,9 +1,0 @@
-git_repo: https://github.com/rh-emea-sa/industrial-edge.git
-
-quay_auth_token: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJiVzExY21GcllXMHJjbWhmWlcxbFlWOXpZVjlpYjNRNlZ6aFlXa1JSVlVKV01ERTNRa3hOTjBnMk9GUkpUVTlQVWt4UFRVdExPRXRVVlVSS1dFOWFNbFJTTWt0WU1qSkVPVVpNV0VFeFdsVkZTRkpKUjBWQ1NnPT0iLAogICAgICAiZW1haWwiOiAiIgogICAgfQogIH0KfQ==
-github_access_token: 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
-github_account: rh-emea-sa-bot
-s3_secret: BASE64STRING
-
-ocp_username: opentlc-mgr
-ocp_password: 
