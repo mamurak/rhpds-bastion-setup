@@ -1,0 +1,26 @@
+global:
+  pattern: industrial-edge
+
+  options:
+    useCSV: False
+    syncPolicy: Automatic
+    installPlanApproval: Automatic
+
+  git:
+    provider: github.com
+    account: rh-emea-sa-bot
+    username: rh-emea-sa-bot
+    email: rh.emea.sa.bot@gmail.com
+    dev_revision: main
+
+  quay:
+    provider: quay.io
+    account: rh_emea_sa_bot
+
+  datacenter:
+    clustername: {{ cluster_name }}
+    domain: {{ cluster_domain }}
+
+  edge:
+    clustername: {{ cluster_name }}
+    domain: {{ cluster_domain }}

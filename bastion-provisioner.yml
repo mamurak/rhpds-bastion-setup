@@ -9,11 +9,36 @@
         msg: All variables in rhods_bastion.yml should be populated.
       when: (quay_auth_token == None or quay_auth_token is not defined) or (github_access_token == None or github_access_token is not defined) or (github_account == None or github_account is not defined) or (s3_secret == None or s3_secret is not defined)
 
+    - name: Add token to git repo
+      ansible.builtin.set_fact:
+        git_repo_token: "{{ git_repo | replace('https://', 'https://' + github_access_token + '@' ) }}"
+
     - name: Clone rh-emea-sa repository
       ansible.builtin.git:
-        repo: "{{ git_repo }}"
-        dest: /home/lab-user/industrial-edge
+        repo: "{{ git_repo_token }}"
+        dest: ~/industrial-edge
         version: "{{ git_branch }}"
+
+
+    - name: Set Cluster URL as fact
+      ansible.builtin.set_fact:
+        cluster_url: "{{ ocp_api_url | urlsplit('hostname') | split('.') }}"
+
+    - name: Set Cluster name and domain as fact
+      ansible.builtin.set_fact:
+        cluster_name: "{{ cluster_url[1] }}"
+        cluster_domain: "{{ cluster_url | reject('search', splitted[0]) | reject('search',splitted[1]) | list | join('.') }}"
+
+    - name: Populate values-secret.yml file in {{ ansible_user }} home
+      ansible.builtin.template:
+        src: values-global.yaml.j2
+        dest: ~/industrial-edge/values-global.yaml
+        mode: 0755
+
+    - name: Push modifications to user branch
+      ansible.builtin.shell:
+        cmd: git add values-global-yaml && git commit -m "Updated cluster name and domain" && git push -u origin {{ git_branch }}
+        chdir: ~/industrial-edge
 
     - name: Populate values-secret.yml file in {{ ansible_user }} home
       ansible.builtin.template:
