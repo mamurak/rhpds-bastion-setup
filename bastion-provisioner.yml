@@ -18,7 +18,7 @@
         repo: "{{ git_repo_token }}"
         dest: ~/industrial-edge
         version: "{{ git_branch }}"
-
+        force: true
 
     - name: Set Cluster URL as fact
       ansible.builtin.set_fact:
@@ -27,20 +27,29 @@
     - name: Set Cluster name and domain as fact
       ansible.builtin.set_fact:
         cluster_name: "{{ cluster_url[1] }}"
-        cluster_domain: "{{ cluster_url | reject('search', splitted[0]) | reject('search',splitted[1]) | list | join('.') }}"
+        cluster_domain: "{{ cluster_url | reject('search', cluster_url[0]) | reject('search',cluster_url[1]) | list | join('.') }}"
 
-    - name: Populate values-secret.yml file in {{ ansible_user }} home
+    - name: Populate values-global.yaml file in {{ ansible_user }} home
       ansible.builtin.template:
         src: values-global.yaml.j2
         dest: ~/industrial-edge/values-global.yaml
         mode: 0755
 
+    - name: Prepare for pushing
+      ansible.builtin.copy:
+        content: "https://{{ github_account }}:{{ github_access_token }}@github.com"
+        dest: ~/.git-credentials
+        mode: 0700
+
+    - name: Prepare for pushing
+      ansible.builtin.shell: git config credential.helper store 'store --file=~/.git-credentials'
+
     - name: Push modifications to user branch
       ansible.builtin.shell:
-        cmd: git add values-global-yaml && git commit -m "Updated cluster name and domain" && git push -u origin {{ git_branch }}
+        cmd: git add values-global.yaml && git commit -m "Updated cluster name and domain" && git push -u origin {{ git_branch }}
         chdir: ~/industrial-edge
 
-    - name: Populate values-secret.yml file in {{ ansible_user }} home
+    - name: Populate values-secret.yaml file in {{ ansible_user }} home
       ansible.builtin.template:
         src: values-secret.yaml.j2
         dest: ~/values-secret.yaml
