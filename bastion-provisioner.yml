@@ -9,10 +9,6 @@
         msg: All variables in rhods_bastion.yml should be populated.
       when: (quay_auth_token == None or quay_auth_token is not defined) or (github_access_token == None or github_access_token is not defined) or (github_account == None or github_account is not defined) or (s3_secret == None or s3_secret is not defined)
 
-    - name: Add token to git repo
-      ansible.builtin.set_fact:
-        git_repo_token: "{{ git_repo | replace('https://', 'https://' + github_access_token + '@' ) }}"
-
     - name: Clone rh-emea-sa repository
       ansible.builtin.git:
         repo: "{{ git_repo_token }}"
