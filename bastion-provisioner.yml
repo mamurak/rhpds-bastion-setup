@@ -11,7 +11,7 @@
 
     - name: Clone rh-emea-sa repository
       ansible.builtin.git:
-        repo: "{{ git_repo_token }}"
+        repo: "{{ git_repo }}"
         dest: ~/industrial-edge
         version: "{{ git_branch }}"
         force: true
@@ -38,7 +38,9 @@
         mode: 0700
 
     - name: Prepare for pushing
-      ansible.builtin.shell: git config credential.helper store 'store --file=~/.git-credentials'
+      ansible.builtin.shell:
+        cmd: git config credential.helper store 'store --file=~/.git-credentials'
+        chdir: ~/industrial-edge
 
     - name: Push modifications to user branch
       ansible.builtin.shell:
