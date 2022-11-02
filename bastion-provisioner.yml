@@ -18,7 +18,7 @@
 
     - name: Set Cluster URL as fact
       ansible.builtin.set_fact:
-        cluster_url: "{{ ocp_api_url | urlsplit('hostname') | split('.') }}"
+        cluster_url: "{{ ocp_api_url | urlsplit('hostname') | ansible.builtin.split('.') }}"
 
     - name: Set Cluster name and domain as fact
       ansible.builtin.set_fact:
