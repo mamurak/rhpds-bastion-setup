@@ -1,14 +1,13 @@
 # Playbook to provision all needed resources
 
 This playbook is used to provision all required resources (configurations, operators, OCP resources) that are needed for the ML/CI-CD pipelines and scenario.
+It uses a custom Execution Environment with preloaded collections and roles needed for setting up the environment.
 
 ## Preliminary steps
 
-### Collection setup
+### Environment setup
 
-To get it up and running it relies on some collections, so you will need to install the requirements before proceeding:
-
-    ansible-galaxy collection install -r requirements.yml
+Install *ansible navigator* for your setup following [instructions](https://ansible-navigator.readthedocs.io/en/latest/installation/)
 
 ### Fill the inventory
 
@@ -35,7 +34,7 @@ The inventory needs to be populated with the **bastion** host information:
 
 Once your variables and inventory will be filled up, you can proceed running the playbook:
 
-    ansible-playbook -i inventory bastion-provisioner.yml
+    ansible-navigator run -i inventory -m stdout bastion-provisioner.yml
 
 At the end of the execution, the relevant URLs for the different ArgoCD Instances will be provided, as well as the resource deployment, pipeline execution and operator setup will be initiated on the cluster.
 
